@@ -1,10 +1,15 @@
 import { Scene } from 'phaser';
+import Deck from '../game-objects/Deck';
+import Card from '../game-objects/Card';
+import Player from '../game-objects/Player';
 
 export class Game extends Scene
 {
     camera: Phaser.Cameras.Scene2D.Camera;
     background: Phaser.GameObjects.Image;
     msg_text : Phaser.GameObjects.Text;
+    player: Player;
+    deck: Deck;
 
     constructor ()
     {
@@ -25,6 +30,19 @@ export class Game extends Scene
             align: 'center'
         });
         this.msg_text.setOrigin(0.5);
+
+        let cards = [];
+        for (let i = 0; i < 10; i++) {
+            cards.push(new Card(i.toString())); 
+        }
+        this.deck = new Deck(cards);
+        this.player = new Player(this.deck);
+
+        console.log(this.player.deck);
+        this.player.drawCard();
+        this.player.drawCard();
+        this.player.drawCard();
+        console.log(this.player.hand);
 
         this.input.once('pointerdown', () => {
 

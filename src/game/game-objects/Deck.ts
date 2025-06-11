@@ -4,11 +4,20 @@ class Deck {
     StartingCards: number;
     CardsInDeck: Card[];
 
+    constructor(cards: Card[]) {
+        this.StartingCards = cards.length;
+        this.CardsInDeck = [];
+        for (let i = 0; i < this.StartingCards; i++) {
+            this.CardsInDeck.push(new Card(i.toString()));
+        }
+        this.shuffle();
+    }
+
     remainingCards(): number {
         return this.CardsInDeck.length;
     }
 
-    shuffleDeck(): void {
+    shuffle(): void {
         var m = this.CardsInDeck.length, t, i;
 
         // While there remain elements to shuffle…
