@@ -10,6 +10,7 @@ export class Game extends Scene
     msg_text : Phaser.GameObjects.Text;
     player: Player;
     deck: Deck;
+    handDisplay: Phaser.GameObjects.Group;
 
     constructor ()
     {
@@ -18,8 +19,10 @@ export class Game extends Scene
 
     create ()
     {
+        this.input.topOnly = true; 
         this.camera = this.cameras.main;
         this.camera.setBackgroundColor(0x00ff00);
+        this.handDisplay = this.add.group();
 
         this.background = this.add.image(512, 384, 'background');
         this.background.setAlpha(0.5);
@@ -35,23 +38,32 @@ export class Game extends Scene
         console.log(this.player.deck);
         this.player.drawCards(3);
         console.log(this.player.hand);
-        this.player.hand.cards.forEach((card, index) => {
-            this.add.sprite(100 + (index + 1) * 80, 650, 'cards');
-            this.add.text(90 + (index + 1) * 80, 620, card.cardName, { font: 'Arial', color: '#111111'}).setFontSize(36);
-        });
+        this.redrawHand();
         
         this.input.on('pointerdown', () => {
             this.player.drawCard();
             if (this.player.deck.remainingCards() === 0) {
                 this.scene.start('GameOver');
             }
-            let hand = this.player.hand.cards;
-            this.add.sprite(100 + hand.length * 80, 650, 'cards');
+            this.redrawHand();
             
-            this.add.text(90 + hand.length * 80, 620, hand[hand.length - 1].cardName, { font: 'Arial', color: '#111111'}).setFontSize(36);
-
             
 
+        });
+    }
+
+    redrawHand(): void {
+        this.handDisplay.clear(true, true);
+        this.player.hand.cards.forEach((card, index) => {
+            let sprite = this.add.sprite(100 + (index + 1) * 80, 650, 'cards');
+            let text = this.add.text(90 + (index + 1) * 80, 620, card.cardName, { font: 'Arial', color: '#111111'}).setFontSize(36);
+            sprite.setInteractive();
+            sprite.on('pointerdown', () => {
+                this.player.hand.discard(index);
+                this.redrawHand();
+            });
+            this.handDisplay.add(sprite);
+            this.handDisplay.add(text);
         });
     }
 }
