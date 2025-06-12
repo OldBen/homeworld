@@ -155,4 +155,6 @@ Created by [Phaser Studio](mailto:support@phaser.io). Powered by coffee, anime, 
 
 The Phaser logo and characters are &copy; 2011 - 2025 Phaser Studio Inc.
 
+Card sprites by [LyniaDesign](https://lyniadesign.itch.io/modular-fantasy-cards-asset-pack)
+
 All rights reserved.

@@ -20,5 +20,11 @@ class Player {
             console.log("No more cards in the deck to draw.");
         }
     }
+
+    drawCards(count: number): void {
+        for (let i = 0; i < count; i++) {
+            this.drawCard();
+        }
+    }
 }
 export default Player;
