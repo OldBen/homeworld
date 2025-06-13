@@ -19,7 +19,6 @@ export class Game extends Scene
 
     create ()
     {
-        this.input.topOnly = true; 
         this.camera = this.cameras.main;
         this.camera.setBackgroundColor(0x00ff00);
         this.handDisplay = this.add.group();
@@ -30,7 +29,8 @@ export class Game extends Scene
 
         let cards = [];
         for (let i = 0; i < 10; i++) {
-            cards.push(new Card(i.toString())); 
+            let cost = Math.floor(Math.random() * 3);
+            cards.push(new Card(i.toString(), cost)); 
         }
         this.deck = new Deck(cards);
         this.player = new Player(this.deck);
@@ -40,7 +40,8 @@ export class Game extends Scene
         console.log(this.player.hand);
         this.redrawHand();
         
-        this.input.on('pointerdown', () => {
+        var key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        key.on('down', () => {
             this.player.drawCard();
             if (this.player.deck.remainingCards() === 0) {
                 this.scene.start('GameOver');
@@ -56,10 +57,18 @@ export class Game extends Scene
         this.handDisplay.clear(true, true);
         this.player.hand.cards.forEach((card, index) => {
             let sprite = this.add.sprite(100 + (index + 1) * 80, 650, 'cards');
+            if (card.highlighted) {
+                sprite.setFrame(1); // Highlighted frame
+            }
             let text = this.add.text(90 + (index + 1) * 80, 620, card.cardName, { font: 'Arial', color: '#111111'}).setFontSize(36);
             sprite.setInteractive();
             sprite.on('pointerdown', () => {
-                this.player.hand.discard(index);
+                if (this.player.hand.cards[index].highlighted){
+                    this.player.hand.playCard(index);
+                } else {
+                    this.player.hand.cards.forEach((c) => c.highlighted = false);
+                    this.player.hand.cards[index].highlighted = true;
+                }
                 this.redrawHand();
             });
             this.handDisplay.add(sprite);

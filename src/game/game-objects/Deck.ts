@@ -8,7 +8,7 @@ class Deck {
         this.StartingCards = cards.length;
         this.CardsInDeck = [];
         for (let i = 0; i < this.StartingCards; i++) {
-            this.CardsInDeck.push(new Card(i.toString()));
+            this.CardsInDeck.push(cards[i]);
         }
         this.shuffle();
     }
